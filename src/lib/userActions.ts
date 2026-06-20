@@ -4,7 +4,7 @@ import type { MetroServiceState } from "../domain/metro/schedule.service";
 import type { StationId, DirectionId } from "../domain/metro/metro.types";
 import { getCurrentAppUrl, getDeviceInfo } from "./device";
 
-const SUPPORT_EMAIL = "metroekb.feedback@gmail.com";
+const SUPPORT_ISSUES_URL = "https://github.com/yarrobong/ebk-metro/issues/new";
 
 export async function shareApp(): Promise<"shared" | "copied" | "manual" | "cancelled"> {
   const url = getCurrentAppUrl();
@@ -52,9 +52,16 @@ export function reportIssue(input: ReportIssueInput) {
     return;
   }
 
-  const subject = encodeURIComponent("Метро Екатеринбурга — сообщение об ошибке");
-  const body = encodeURIComponent(buildIssueTemplate(input));
-  window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+  const params = new URLSearchParams({
+    title: "Метро Екатеринбурга — сообщение об ошибке",
+    body: buildIssueTemplate(input),
+  });
+
+  window.open(
+    `${SUPPORT_ISSUES_URL}?${params.toString()}`,
+    "_blank",
+    "noopener,noreferrer",
+  );
 }
 
 interface ReportIssueInput {
