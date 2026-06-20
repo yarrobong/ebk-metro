@@ -77,6 +77,29 @@ describe("Schedule Service", () => {
     expect(result.nearest?.secondsLeft).toBe(-5);
   });
 
+  it("does not mark a regular nearest train as the last one", () => {
+    const result = getUpcomingTrains(["12:05", "12:10"], MOCK_TIME);
+
+    expect(result.nearest?.scheduleTime).toBe("12:05");
+    expect(result.nearest?.isLastTrain).toBe(false);
+  });
+
+  it("marks the nearest train as the last one during waiting, approaching and arriving", () => {
+    const waiting = getUpcomingTrains(["12:05"], MOCK_TIME);
+    const approaching = getUpcomingTrains(["12:05"], {
+      totalSeconds: 12 * 3600 + 4 * 60 + 40,
+    });
+    const arriving = getUpcomingTrains(["12:05"], {
+      totalSeconds: 12 * 3600 + 5 * 60 + 5,
+    });
+
+    expect(waiting.nearest?.isLastTrain).toBe(true);
+    expect(approaching.nearest?.status).toBe("approaching");
+    expect(approaching.nearest?.isLastTrain).toBe(true);
+    expect(arriving.nearest?.status).toBe("arriving");
+    expect(arriving.nearest?.isLastTrain).toBe(true);
+  });
+
   it("switches to next train after arriving window", () => {
     const time: MetroTime = { ...MOCK_TIME, totalSeconds: 12 * 3600 + 5 * 60 + 20 };
     const result = getUpcomingTrains(MOCK_SCHEDULE, time);
@@ -112,6 +135,36 @@ describe("Schedule Service", () => {
 });
 
 describe("Operational day handling", () => {
+  it("moves to after_close once the last train arrival window finishes", () => {
+    const time: MetroTime = {
+      ...MOCK_TIME,
+      dateString: "2024-01-03",
+      dayOfWeek: 3,
+      isWeekend: false,
+      hours: 23,
+      minutes: 59,
+      seconds: 16,
+      totalSeconds: 23 * 3600 + 59 * 60 + 16,
+    };
+
+    const state = resolveMetroStateFromSchedules({
+      currentSchedule: ["06:00", "23:59"],
+      currentDayType: "weekday",
+      currentDate: "2024-01-03",
+      currentTime: time,
+      nextSchedule: ["06:10", "23:30"],
+      nextDayType: "weekday",
+      nextDate: "2024-01-04",
+      previousSchedule: ["06:00", "23:40"],
+      previousDayType: "weekday",
+      previousDate: "2024-01-02",
+    });
+
+    expect(state.status).toBe("after_close");
+    expect(state.nearest).toBeNull();
+    expect(state.firstTrain?.displayTime).toBe("06:10");
+  });
+
   it("keeps previous operational day active after midnight while the last train is arriving", () => {
     const time: MetroTime = {
       ...MOCK_TIME,

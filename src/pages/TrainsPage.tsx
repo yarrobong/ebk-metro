@@ -308,10 +308,13 @@ export function TrainsPage() {
                 : `Прибытие в ${metroState.nearest.displayTime}`}
           </p>
 
-          {metroState.nearest.isLast && (
-            <p className="mt-2 text-sm font-medium text-warning bg-warning/10 inline-block px-3 py-1 rounded-full">
-              Последний поезд
-            </p>
+          {metroState.nearest.isLastTrain && (
+            <div className="mx-auto mt-4 max-w-md rounded-2xl border border-warning/35 bg-warning/10 px-4 py-3">
+              <p className="text-sm font-semibold text-text-primary">Последний поезд</p>
+              <p className="mt-1 text-sm leading-5 text-text-secondary">
+                После него поездов по этому направлению сегодня больше не будет
+              </p>
+            </div>
           )}
         </Card>
       ) : null}
@@ -332,7 +335,7 @@ export function TrainsPage() {
                   <span className="text-lg font-medium tabular-nums text-text-primary">
                     {train.displayTime}
                   </span>
-                  {train.isLast && (
+                  {train.isLastTrain && (
                     <span className="text-xs font-medium text-warning bg-warning/10 px-2 py-0.5 rounded">
                       последний
                     </span>
