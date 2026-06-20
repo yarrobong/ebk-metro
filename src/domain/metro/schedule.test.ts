@@ -33,6 +33,29 @@ describe("Schedule Service", () => {
     ]);
   });
 
+  it("limits the secondary list to four trains after the nearest one", () => {
+    const result = getUpcomingTrains(
+      ["11:55", "12:05", "12:10", "12:15", "12:20", "12:25", "12:30"],
+      MOCK_TIME,
+    );
+
+    expect(result.nearest?.scheduleTime).toBe("12:05");
+    expect(result.next).toHaveLength(4);
+    expect(result.next.map((train) => train.scheduleTime)).toEqual([
+      "12:10",
+      "12:15",
+      "12:20",
+      "12:25",
+    ]);
+  });
+
+  it("returns fewer than four trains when fewer future trains remain", () => {
+    const result = getUpcomingTrains(["11:55", "12:05", "12:10", "12:15"], MOCK_TIME);
+
+    expect(result.nearest?.scheduleTime).toBe("12:05");
+    expect(result.next.map((train) => train.scheduleTime)).toEqual(["12:10", "12:15"]);
+  });
+
   it("handles empty schedule", () => {
     const result = getUpcomingTrains([], MOCK_TIME);
     expect(result.status).toBe("error");
@@ -59,6 +82,12 @@ describe("Schedule Service", () => {
     const result = getUpcomingTrains(MOCK_SCHEDULE, time);
     expect(result.nearest?.scheduleTime).toBe("12:10");
     expect(result.nearest?.status).toBe("waiting");
+    expect(result.next.map((train) => train.scheduleTime)).toEqual([
+      "12:15",
+      "12:20",
+      "12:25",
+    ]);
+    expect(result.next.map((train) => train.scheduleTime)).not.toContain("12:10");
   });
 
   it("returns not_found if all trains passed", () => {
@@ -66,6 +95,19 @@ describe("Schedule Service", () => {
     const result = getUpcomingTrains(MOCK_SCHEDULE, time);
     expect(result.status).toBe("not_found");
     expect(result.nearest).toBeNull();
+  });
+
+  it("keeps next-day calendar times readable after midnight", () => {
+    const time: MetroTime = {
+      ...MOCK_TIME,
+      hours: 23,
+      minutes: 58,
+      totalSeconds: 23 * 3600 + 58 * 60,
+    };
+    const result = getUpcomingTrains(["23:55", "24:05", "24:31", "24:40"], time);
+
+    expect(result.nearest?.displayTime).toBe("00:05");
+    expect(result.next.map((train) => train.displayTime)).toEqual(["00:31", "00:40"]);
   });
 });
 
