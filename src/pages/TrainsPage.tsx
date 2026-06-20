@@ -15,6 +15,7 @@ import { Card } from "../components/ui/Card";
 import { PageHeader } from "../components/ui/PageHeader";
 import { BottomSheet } from "../components/ui/BottomSheet";
 import { DestinationSelectorSheet } from "../components/metro/DestinationSelectorSheet";
+import { RouteProgressCard } from "../components/metro/RouteProgressCard";
 import { useAppStore } from "../app/store";
 import { usePwa } from "../app/usePwa";
 import { getStationById, getDirectionById, getNextStation } from "../domain/metro";
@@ -23,12 +24,7 @@ import { useLiveMetroTime } from "../app/hooks/useLiveMetroTime";
 import { resolveMetroState } from "../domain/metro/schedule.service";
 import { formatRelativeTime, formatTimer } from "../domain/time";
 import { metadata } from "../data/metadata";
-import {
-  buildTravelEstimate,
-  formatApproximateTravelTime,
-  formatStationCount,
-  getDestinationOptions,
-} from "../domain/metro";
+import { buildTravelEstimate, getDestinationOptions } from "../domain/metro";
 import { reportIssue } from "../lib/userActions";
 
 function formatDateRussian(dateStr: string) {
@@ -420,21 +416,16 @@ export function TrainsPage() {
           )
         ) : (
           <div className="mt-5 space-y-4">
-            <div className="rounded-2xl border border-border bg-surface-raised p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm text-text-secondary">Станция назначения</p>
-                  <p className="mt-2 text-2xl font-bold text-text-primary">
-                    {travelEstimate.destination.name}
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-text-primary">
-                    {formatStationCount(travelEstimate.stationCount)}
-                  </p>
-                  <p className="mt-1 text-sm text-text-secondary">
-                    {formatApproximateTravelTime(travelEstimate.travelSeconds)}
-                  </p>
-                </div>
+            <RouteProgressCard
+              currentStation={station!}
+              destinationStation={travelEstimate.destination}
+              routeStations={travelEstimate.routeStations}
+              stationCount={travelEstimate.stationCount}
+              travelSeconds={travelEstimate.travelSeconds}
+            />
 
+            <div className="rounded-2xl border border-border bg-surface-raised p-4">
+              <div className="flex justify-end">
                 <Button
                   ref={destinationTriggerRef}
                   variant="ghost"
