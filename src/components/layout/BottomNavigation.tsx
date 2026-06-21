@@ -37,7 +37,7 @@ export function BottomNavigation() {
   return (
     <nav
       aria-label="Основная навигация"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border-light bg-app-bg/95 pb-[env(safe-area-inset-bottom)] shadow-navigation backdrop-blur-xl"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border-light bg-bottom-nav pb-[env(safe-area-inset-bottom)] shadow-navigation backdrop-blur-xl"
     >
       <div className="mx-auto grid max-w-[520px] grid-cols-3 px-2">
         {navigationItems.map((item) => {

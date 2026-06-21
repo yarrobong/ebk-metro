@@ -1,10 +1,4 @@
-import {
-  ArrowLeft,
-  ExternalLink,
-  MessageCircleWarning,
-  Share2,
-  TrainFront,
-} from "lucide-react";
+import { ArrowLeft, ExternalLink, MessageCircleWarning, Share2 } from "lucide-react";
 
 import { useAppStore } from "../app/store";
 import { metadata } from "../data/metadata";
@@ -14,6 +8,8 @@ import { PageHeader } from "../components/ui/PageHeader";
 import { Button } from "../components/ui/Button";
 import { formatRussianDate } from "../domain/time";
 import { openSourceSchedule, reportIssue, shareApp } from "../lib/userActions";
+
+const aboutIconSrc = `${import.meta.env.BASE_URL}pwa-192x192.png`;
 
 export function AboutPage() {
   const {
@@ -52,8 +48,14 @@ export function AboutPage() {
       />
 
       <Card className="text-center">
-        <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-accent text-white shadow-card">
-          <TrainFront size={40} aria-hidden="true" />
+        <div className="mx-auto flex size-20 items-center justify-center rounded-3xl bg-surface-raised shadow-card ring-1 ring-border-light">
+          <img
+            src={aboutIconSrc}
+            width={64}
+            height={64}
+            alt=""
+            className="size-16 rounded-2xl"
+          />
         </div>
 
         <h2 className="mt-5 text-2xl font-bold text-text-primary">Метро Екатеринбурга</h2>

@@ -16,8 +16,10 @@
 ## State model
 
 - Zustand stores the current screen, route selection, destination selection, and toast state.
+- A dedicated lightweight theme store keeps only the user's theme preference and the resolved theme.
 - Route selection is session-only and must not persist across full app launches.
 - LocalStorage is limited to explicit user settings and non-critical PWA hints.
+- Theme preference defaults to `system`, follows `prefers-color-scheme`, and updates the root `data-theme` plus runtime `theme-color`.
 
 ## Time and schedule
 
@@ -32,3 +34,4 @@
 - `vite-plugin-pwa` generates the manifest and service worker.
 - Offline readiness and update prompts are handled in `src/app/PwaContext.tsx`.
 - Updates must not reload the app automatically without user action.
+- The launch shell in `index.html` and `public/404.html` must set the correct theme before React starts to avoid a flash of the wrong theme.

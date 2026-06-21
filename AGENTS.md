@@ -30,6 +30,8 @@ Run these checks before finishing substantial changes:
 
 - No backend, Express server, database, auth, AI features, or runtime API dependency.
 - Route and destination selection must remain session-only; only explicit user settings may go to LocalStorage.
+- Theme preference may be stored locally as `system | light | dark`, but resolved theme must be derived at runtime.
+- Theme changes must work through a single root-level mechanism and respect `prefers-color-scheme`.
 
 ## Git Rules
 

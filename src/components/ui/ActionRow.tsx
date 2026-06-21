@@ -29,7 +29,7 @@ export function ActionRow({
         "focus-ring flex min-h-16 w-full items-center gap-3 px-5 py-4 text-left transition",
         disabled
           ? "cursor-not-allowed opacity-50"
-          : "hover:bg-white/[0.03] active:scale-[0.99]",
+          : "hover:bg-surface-hover/70 active:scale-[0.99]",
       )}
     >
       <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-raised text-text-secondary">

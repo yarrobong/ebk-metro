@@ -24,7 +24,7 @@ export function Switch({ checked, label, onCheckedChange }: SwitchProps) {
       <span
         aria-hidden="true"
         className={cn(
-          "size-6 rounded-full bg-white shadow-md transition-transform",
+          "size-6 rounded-full bg-text-inverse shadow-md transition-transform",
           checked ? "translate-x-7" : "translate-x-1",
         )}
       />

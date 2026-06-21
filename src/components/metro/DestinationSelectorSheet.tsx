@@ -43,7 +43,7 @@ export function DestinationSelectorSheet({
                   className={cn(
                     "flex size-11 shrink-0 items-center justify-center rounded-full transition",
                     isSelected
-                      ? "bg-accent text-white"
+                      ? "bg-accent text-text-inverse"
                       : "bg-surface-raised text-text-secondary group-hover:text-accent",
                   )}
                 >

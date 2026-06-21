@@ -8,12 +8,14 @@ import {
 } from "lucide-react";
 
 import { useAppStore } from "../app/store";
+import { useThemeStore } from "../app/theme-store";
 import { usePwa } from "../app/usePwa";
 import { metadata } from "../data/metadata";
 import { ActionRow } from "../components/ui/ActionRow";
 import { Card } from "../components/ui/Card";
 import { PageHeader } from "../components/ui/PageHeader";
 import { Switch } from "../components/ui/Switch";
+import { ThemePreferenceControl } from "../components/ui/ThemePreferenceControl";
 import { reportIssue, shareApp } from "../lib/userActions";
 
 export function SettingsPage() {
@@ -26,6 +28,9 @@ export function SettingsPage() {
     selectedDestinationId,
     showToast,
   } = useAppStore();
+  const themePreference = useThemeStore((state) => state.preference);
+  const resolvedTheme = useThemeStore((state) => state.resolvedTheme);
+  const setThemePreference = useThemeStore((state) => state.setPreference);
   const { checkForUpdates, isCheckingForUpdates } = usePwa();
 
   const handleShare = async () => {
@@ -49,6 +54,20 @@ export function SettingsPage() {
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.24em] text-text-secondary">
           Отображение
         </p>
+        <Card className="space-y-4">
+          <ThemePreferenceControl
+            preference={themePreference}
+            resolvedTheme={resolvedTheme}
+            onChange={(preference) => {
+              if (preference === themePreference) {
+                return;
+              }
+
+              setThemePreference(preference);
+              showToast("Тема сохранена", "success");
+            }}
+          />
+        </Card>
         <Card className="p-0">
           <div className="flex min-h-16 items-center justify-between gap-4 px-5 py-4">
             <div>

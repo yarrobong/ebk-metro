@@ -33,7 +33,7 @@ export function LineMap({ stations, selectedStationId, onStationSelect }: LineMa
                 "focus-ring group relative flex items-center min-h-[56px] w-full text-left px-4 rounded-xl transition duration-200",
                 isSelected
                   ? "bg-accent-muted"
-                  : "hover:bg-white/[0.03] active:bg-white/[0.05]",
+                  : "hover:bg-surface-hover/70 active:bg-surface-hover",
               )}
             >
               {/* Маркер станции */}
@@ -46,7 +46,7 @@ export function LineMap({ stations, selectedStationId, onStationSelect }: LineMa
                 )}
                 aria-hidden="true"
               >
-                {isSelected && <div className="size-2.5 rounded-full bg-white" />}
+                {isSelected && <div className="size-2.5 rounded-full bg-text-inverse" />}
               </div>
 
               {/* Название станции */}
@@ -56,7 +56,7 @@ export function LineMap({ stations, selectedStationId, onStationSelect }: LineMa
                     "station-name block text-lg font-medium leading-tight transition-colors duration-200",
                     isSelected
                       ? "text-accent font-bold"
-                      : "text-text-primary group-hover:text-white",
+                      : "text-text-primary group-hover:text-text-primary",
                   )}
                 >
                   {station.name}

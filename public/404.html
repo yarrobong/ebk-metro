@@ -7,22 +7,76 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#0B0E12" />
+    <meta name="theme-color" content="#F4F7F6" />
+    <meta name="color-scheme" content="light" />
+    <script>
+      (() => {
+        const storageKey = "metro-theme";
+        const darkColor = "#0B0E12";
+        const lightColor = "#F4F7F6";
+        let preference = "system";
+
+        try {
+          const savedPreference = window.localStorage.getItem(storageKey);
+          if (
+            savedPreference === "system" ||
+            savedPreference === "light" ||
+            savedPreference === "dark"
+          ) {
+            preference = savedPreference;
+          }
+        } catch {}
+
+        const mediaQuery =
+          typeof window.matchMedia === "function"
+            ? window.matchMedia("(prefers-color-scheme: dark)")
+            : null;
+        const theme =
+          preference === "dark" ||
+          (preference === "system" && mediaQuery && mediaQuery.matches)
+            ? "dark"
+            : "light";
+        const color = theme === "dark" ? darkColor : lightColor;
+        const root = document.documentElement;
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        const colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+        root.style.backgroundColor = color;
+
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute("content", color);
+        }
+
+        if (colorSchemeMeta) {
+          colorSchemeMeta.setAttribute("content", theme);
+        }
+      })();
+    </script>
     <style>
       :root {
-        color-scheme: dark;
-        background: #0b0e12;
-        color: #e2e8f0;
+        --redirect-bg: #f4f7f6;
+        --redirect-text: #617081;
+        color-scheme: light;
+        background: #f4f7f6;
+        color: #617081;
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
           sans-serif;
+      }
+
+      html[data-theme="dark"] {
+        --redirect-bg: #0b0e12;
+        --redirect-text: #969da8;
+        color-scheme: dark;
       }
 
       html,
       body {
         min-height: 100%;
         margin: 0;
-        background: #0b0e12;
+        background: var(--redirect-bg);
       }
 
       body {
@@ -35,7 +89,7 @@
 
       p {
         margin: 0;
-        color: #94a3b8;
+        color: var(--redirect-text);
       }
     </style>
     <title>Перенаправление…</title>

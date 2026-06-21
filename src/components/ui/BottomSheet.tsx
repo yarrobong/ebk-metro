@@ -50,14 +50,14 @@ export function BottomSheet({
     >
       <div
         ref={overlayRef}
-        className="absolute inset-0 bg-black/60 transition-opacity backdrop-blur-sm"
+        className="absolute inset-0 bg-overlay transition-opacity backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <div className="relative z-10 w-full max-w-[520px] mx-auto bg-surface-raised rounded-t-[32px] overflow-hidden shadow-2xl safe-area-bottom pb-[env(safe-area-inset-bottom)] animate-in slide-in-from-bottom-full duration-300">
+      <div className="relative z-10 mx-auto w-full max-w-[520px] overflow-hidden rounded-t-[32px] border border-border-light bg-surface-raised shadow-2xl safe-area-bottom animate-in slide-in-from-bottom-full duration-300 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-center pt-3 pb-2 opacity-40">
-          <div className="w-12 h-1.5 rounded-full bg-white" />
+          <div className="h-1.5 w-12 rounded-full bg-border-strong" />
         </div>
 
         <div className="px-6 pb-8 pt-2">
@@ -76,7 +76,7 @@ export function BottomSheet({
             <button
               type="button"
               onClick={onClose}
-              className="focus-ring p-2 -mr-2 text-text-secondary hover:text-text-primary rounded-full transition"
+              className="focus-ring -mr-2 rounded-full p-2 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
               aria-label="Закрыть"
             >
               <X size={24} aria-hidden="true" />

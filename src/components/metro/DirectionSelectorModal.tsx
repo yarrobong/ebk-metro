@@ -28,7 +28,7 @@ export function DirectionSelectorModal({
                 <p className="text-xs text-text-secondary font-medium tracking-wide uppercase mb-0.5">
                   Направление
                 </p>
-                <p className="text-base font-semibold text-text-primary group-hover:text-white transition">
+                <p className="text-base font-semibold text-text-primary transition group-hover:text-text-primary">
                   {dir.name}
                 </p>
               </div>

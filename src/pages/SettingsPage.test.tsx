@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { useAppStore } from "../app/store";
+import { useThemeStore } from "../app/theme-store";
 import { SettingsPage } from "./SettingsPage";
 
 const { reportIssue } = vi.hoisted(() => ({
@@ -23,6 +24,7 @@ vi.mock("../app/usePwa", () => ({
 
 describe("SettingsPage", () => {
   beforeEach(() => {
+    localStorage.clear();
     useAppStore.setState({
       screen: "settings",
       showSeconds: true,
@@ -33,6 +35,7 @@ describe("SettingsPage", () => {
       isDestinationSheetOpen: false,
       activeToast: null,
     });
+    useThemeStore.getState().reset();
   });
 
   it("toggles seconds and keeps the setting in store", async () => {
@@ -70,5 +73,28 @@ describe("SettingsPage", () => {
       destinationId: "botanicheskaya",
       metroState: null,
     });
+  });
+
+  it("shows all three theme options with radio semantics", async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+
+    const themeGroup = screen.getByRole("radiogroup", { name: "Тема приложения" });
+    expect(themeGroup).toBeInTheDocument();
+
+    const radios = screen.getAllByRole("radio");
+    expect(radios).toHaveLength(3);
+    expect(screen.getByRole("radio", { name: "Автоматически" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+
+    await user.click(screen.getByRole("radio", { name: "Светлая" }));
+
+    expect(useThemeStore.getState().preference).toBe("light");
+    expect(screen.getByRole("radio", { name: "Светлая" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
   });
 });

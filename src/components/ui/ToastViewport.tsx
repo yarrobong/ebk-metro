@@ -49,12 +49,13 @@ export function ToastViewport() {
           className={cn(
             "pointer-events-auto flex items-start gap-3 rounded-2xl border px-4 py-3 shadow-2xl backdrop-blur-xl",
             activeToast.type === "success" &&
-              "border-success/40 bg-success/15 text-white",
+              "border-success/35 bg-success/10 text-text-primary",
             activeToast.type === "info" &&
-              "border-accent/40 bg-surface-raised text-white",
+              "border-accent/30 bg-surface-raised text-text-primary",
             activeToast.type === "warning" &&
-              "border-warning/40 bg-warning/15 text-white",
-            activeToast.type === "error" && "border-danger/40 bg-danger/15 text-white",
+              "border-warning/35 bg-warning/10 text-text-primary",
+            activeToast.type === "error" &&
+              "border-danger/35 bg-danger/10 text-text-primary",
           )}
         >
           <Icon size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
@@ -62,7 +63,7 @@ export function ToastViewport() {
           <button
             type="button"
             onClick={hideToast}
-            className="focus-ring rounded-full p-1 text-white/75 transition hover:bg-white/10 hover:text-white"
+            className="focus-ring rounded-full p-1 text-text-secondary transition hover:bg-surface-hover hover:text-text-primary"
             aria-label="Закрыть уведомление"
           >
             <X size={16} aria-hidden="true" />

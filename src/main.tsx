@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { ThemeController } from "./app/ThemeController";
 import { AppErrorBoundary } from "./components/app/AppErrorBoundary";
 import { RootBootstrap } from "./app/RootBootstrap";
 import "./styles/index.css";
@@ -13,8 +14,10 @@ if (rootElement === null) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <AppErrorBoundary>
-      <RootBootstrap />
-    </AppErrorBoundary>
+    <ThemeController>
+      <AppErrorBoundary>
+        <RootBootstrap />
+      </AppErrorBoundary>
+    </ThemeController>
   </StrictMode>,
 );

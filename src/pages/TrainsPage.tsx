@@ -153,6 +153,7 @@ export function TrainsPage() {
           </div>
         </div>
         <button
+          type="button"
           onClick={() => setScreen("stations")}
           className="focus-ring shrink-0 rounded-lg bg-accent/10 px-3 py-1.5 text-sm font-medium text-accent transition hover:text-accent-hover"
         >
@@ -173,7 +174,7 @@ export function TrainsPage() {
                 className={cn(
                   "focus-ring relative flex-1 py-2.5 text-sm font-medium rounded-lg transition-all",
                   isActive
-                    ? "text-white bg-surface shadow-sm"
+                    ? "bg-surface text-text-primary shadow-sm"
                     : "text-text-secondary hover:text-text-primary",
                 )}
               >
@@ -207,8 +208,8 @@ export function TrainsPage() {
       )}
       {!nextStation && (
         <div className="flex items-start gap-3 px-2">
-          <ArrowRightLeft size={16} className="mt-0.5 shrink-0 text-error" />
-          <p className="text-sm text-error">Не удалось определить следующую станцию.</p>
+          <ArrowRightLeft size={16} className="mt-0.5 shrink-0 text-danger" />
+          <p className="text-sm text-danger">Не удалось определить следующую станцию.</p>
         </div>
       )}
 
@@ -320,7 +321,7 @@ export function TrainsPage() {
             {metroState.next.map((train) => (
               <li
                 key={train.scheduleTime}
-                className="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-surface-hover transition-colors"
+                className="flex items-center justify-between rounded-lg px-2 py-2 transition-colors hover:bg-surface-hover"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-lg font-medium tabular-nums text-text-primary">
@@ -509,7 +510,7 @@ export function TrainsPage() {
 
       {/* Footer Info */}
       <div className="mt-8 space-y-2 text-center opacity-60">
-        <p className="text-xs font-medium text-text-primary bg-surface-raised inline-block px-3 py-1.5 rounded-lg mb-2">
+        <p className="mb-2 inline-block rounded-lg bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary">
           {metroState.dayType === "weekend" ? "Выходной день" : "Рабочий день"}
         </p>
         {metroState.isPreviousOperationalDay && (
