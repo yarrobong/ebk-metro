@@ -8,7 +8,7 @@
 
 - `src/data`: canonical local schedule, station, direction, and drive-time data.
 - `src/domain/time`: timezone-aware current time and formatting helpers for `Asia/Yekaterinburg`.
-- `src/domain/metro`: schedule resolution, operating-day logic, destination options, and travel estimates.
+- `src/domain/metro`: schedule resolution, operating-day logic, full day schedule grouping, destination options, and travel estimates.
 - `src/app`: shell, global store, PWA context, and top-level app state.
 - `src/pages`: station selection, trains, settings, install, and about screens.
 - `src/components`: reusable UI plus metro-specific interaction components.
@@ -20,12 +20,15 @@
 - Route selection is session-only and must not persist across full app launches.
 - LocalStorage is limited to explicit user settings and non-critical PWA hints.
 - Theme preference defaults to `system`, follows `prefers-color-scheme`, and updates the root `data-theme` plus runtime `theme-color`.
+- The nested schedule screen reuses the same store state as `TrainsPage`, so going back must preserve station, direction, destination, and theme context.
 
 ## Time and schedule
 
 - Every schedule calculation must use `Asia/Yekaterinburg`.
 - Calendar day and operational day are distinct concepts.
 - Internal train times may exceed `24:00`; UI formatting must wrap them for display.
+- The compact first/last card and the full daily schedule must both be fed by one shared domain service, not by duplicated JSX calculations.
+- Daily schedule mode `today` must respect the current operational day, while `weekday` and `weekend` expose static templates without real-time highlighting.
 - Schedule edits must stay in `src/data/*` and always pass validation.
 
 ## PWA

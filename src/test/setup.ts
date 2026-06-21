@@ -14,3 +14,13 @@ Object.defineProperty(window, "matchMedia", {
     dispatchEvent: vi.fn(),
   })),
 });
+
+Object.defineProperty(window, "scrollTo", {
+  writable: true,
+  value: vi.fn(),
+});
+
+Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+  writable: true,
+  value: vi.fn(),
+});

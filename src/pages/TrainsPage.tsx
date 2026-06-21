@@ -16,13 +16,14 @@ import { PageHeader } from "../components/ui/PageHeader";
 import { BottomSheet } from "../components/ui/BottomSheet";
 import { DestinationSelectorSheet } from "../components/metro/DestinationSelectorSheet";
 import { RouteProgressCard } from "../components/metro/RouteProgressCard";
+import { ScheduleSummaryCard } from "../components/metro/ScheduleSummaryCard";
 import { useAppStore } from "../app/store";
 import { usePwa } from "../app/usePwa";
 import { getStationById, getDirectionById, getNextStation } from "../domain/metro";
 import { cn } from "../lib/cn";
 import { useLiveMetroTime } from "../app/hooks/useLiveMetroTime";
-import { resolveMetroState } from "../domain/metro/schedule.service";
-import { formatRelativeTime, formatTimer } from "../domain/time";
+import { resolveDaySchedule, resolveMetroState } from "../domain/metro/schedule.service";
+import { formatRelativeTime, formatRussianDayMonth, formatTimer } from "../domain/time";
 import { buildTravelEstimate, getDestinationOptions } from "../domain/metro";
 import { reportIssue } from "../lib/userActions";
 
@@ -60,6 +61,10 @@ export function TrainsPage() {
   const metroState =
     selectedStationId && selectedDirectionId
       ? resolveMetroState(selectedStationId, selectedDirectionId, metroTime)
+      : null;
+  const daySchedule =
+    selectedStationId && selectedDirectionId
+      ? resolveDaySchedule(selectedStationId, selectedDirectionId, metroTime, "today")
       : null;
   const destinationOptions = useMemo(() => {
     if (!selectedStationId || !selectedDirectionId) {
@@ -342,6 +347,16 @@ export function TrainsPage() {
         </div>
       )}
 
+      {daySchedule && (
+        <ScheduleSummaryCard
+          contextLabel={buildScheduleCardContext(daySchedule)}
+          firstTrain={daySchedule.firstTrain}
+          lastTrain={daySchedule.lastTrain}
+          onOpen={() => setScreen("schedule")}
+          accessibleSummary={buildSummaryAriaLabel(daySchedule)}
+        />
+      )}
+
       <Card className="overflow-hidden">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
@@ -511,7 +526,7 @@ export function TrainsPage() {
       {/* Footer Info */}
       <div className="mt-8 space-y-2 text-center opacity-60">
         <p className="mb-2 inline-block rounded-lg bg-surface-raised px-3 py-1.5 text-xs font-medium text-text-primary">
-          {metroState.dayType === "weekend" ? "Выходной день" : "Рабочий день"}
+          {getRuntimeDayTypeLabel(metroState.dayType)}
         </p>
         {metroState.isPreviousOperationalDay && (
           <p className="text-xs text-text-secondary">
@@ -543,4 +558,47 @@ export function TrainsPage() {
       </BottomSheet>
     </div>
   );
+}
+
+function buildScheduleCardContext(
+  schedule: ReturnType<typeof resolveDaySchedule>,
+): string {
+  if (schedule.isPreviousOperationalDay && schedule.serviceDate) {
+    return `Ночная часть расписания за ${formatRussianDayMonth(schedule.serviceDate)}`;
+  }
+
+  if (schedule.serviceDate) {
+    return `${formatRussianDayMonth(schedule.serviceDate)} · ${getCompactDayTypeLabel(schedule.dayType)}`;
+  }
+
+  return getCompactDayTypeLabel(schedule.dayType);
+}
+
+function buildSummaryAriaLabel(schedule: ReturnType<typeof resolveDaySchedule>): string {
+  const firstTrain = schedule.firstTrain;
+  const lastTrain = schedule.lastTrain;
+  const firstPart = firstTrain
+    ? `Первый поезд в ${firstTrain.displayHour} часов ${firstTrain.displayMinute} минут.`
+    : "Первый поезд недоступен.";
+  const lastPart = lastTrain
+    ? `Последний поезд в ${lastTrain.displayHour} часов ${lastTrain.displayMinute} минут${lastTrain.isAfterMidnight ? " после полуночи" : ""}.`
+    : "Последний поезд недоступен.";
+
+  return `${firstPart} ${lastPart}`;
+}
+
+function getCompactDayTypeLabel(dayType: "weekday" | "weekend" | "special"): string {
+  if (dayType === "special") {
+    return "особый режим";
+  }
+
+  return dayType === "weekend" ? "выходной день" : "будний день";
+}
+
+function getRuntimeDayTypeLabel(dayType: "weekday" | "weekend" | "special"): string {
+  if (dayType === "special") {
+    return "Особый режим";
+  }
+
+  return dayType === "weekend" ? "Выходной день" : "Будний день";
 }

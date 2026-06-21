@@ -2,11 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 
 import { useAppStore } from "../app/store";
-import type { MetroServiceState } from "../domain/metro";
+import type { DayScheduleResult, MetroServiceState } from "../domain/metro";
 import { TrainsPage } from "./TrainsPage";
 
-const { resolveMetroStateMock } = vi.hoisted(() => ({
+const { resolveMetroStateMock, resolveDayScheduleMock } = vi.hoisted(() => ({
   resolveMetroStateMock: vi.fn(),
+  resolveDayScheduleMock: vi.fn(),
 }));
 
 vi.mock("../app/hooks/useLiveMetroTime", () => ({
@@ -33,6 +34,7 @@ vi.mock("../app/usePwa", () => ({
 vi.mock("../domain/metro/schedule.service", () => {
   return {
     resolveMetroState: resolveMetroStateMock,
+    resolveDaySchedule: resolveDayScheduleMock,
   };
 });
 
@@ -40,6 +42,7 @@ function createMetroState(overrides: Partial<MetroServiceState> = {}): MetroServ
   return {
     status: "running",
     dayType: "weekday",
+    scheduleDayType: "weekday",
     operationalDate: "2024-01-05",
     isPreviousOperationalDay: false,
     nearest: {
@@ -59,6 +62,52 @@ function createMetroState(overrides: Partial<MetroServiceState> = {}): MetroServ
   };
 }
 
+function createDayScheduleResult(
+  overrides: Partial<DayScheduleResult> = {},
+): DayScheduleResult {
+  return {
+    stationId: "uralskaya",
+    directionId: "to-botanicheskaya",
+    mode: "today",
+    status: "ok",
+    serviceDate: "2024-01-05",
+    dayType: "weekday",
+    scheduleDayType: "weekday",
+    trains: [],
+    groups: [],
+    firstTrain: {
+      sourceTime: "06:02",
+      displayTime: "06:02",
+      operationalMinutes: 6 * 60 + 2,
+      displayHour: 6,
+      displayMinute: 2,
+      isAfterMidnight: false,
+      isPast: true,
+      isNext: false,
+      isCurrent: false,
+      isLast: false,
+      secondsFromNow: -1,
+    },
+    lastTrain: {
+      sourceTime: "24:31",
+      displayTime: "00:31",
+      operationalMinutes: 24 * 60 + 31,
+      displayHour: 0,
+      displayMinute: 31,
+      isAfterMidnight: true,
+      isPast: false,
+      isNext: false,
+      isCurrent: false,
+      isLast: true,
+      secondsFromNow: 0,
+    },
+    nextTrain: null,
+    totalCount: 140,
+    isPreviousOperationalDay: false,
+    ...overrides,
+  };
+}
+
 describe("TrainsPage upcoming trains list", () => {
   beforeEach(() => {
     useAppStore.setState({
@@ -72,6 +121,8 @@ describe("TrainsPage upcoming trains list", () => {
     });
 
     resolveMetroStateMock.mockReset();
+    resolveDayScheduleMock.mockReset();
+    resolveDayScheduleMock.mockReturnValue(createDayScheduleResult());
   });
 
   it("renders exactly four rows and excludes the primary train", () => {

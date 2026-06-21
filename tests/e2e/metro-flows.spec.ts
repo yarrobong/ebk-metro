@@ -48,4 +48,40 @@ test.describe("critical metro flows", () => {
     await expect(page.getByText("Уралмаш")).toBeVisible();
     await expect(page.getByText(/В сторону Ботанической/i)).toBeVisible();
   });
+
+  test("opens the full schedule, switches modes and returns without losing the route", async ({
+    page,
+  }) => {
+    await seedMetroTime(page, TEST_TIME_31_SECONDS);
+    await openApp(page);
+
+    await selectRoute(page, "Геологическая", "В сторону Ботанической");
+    await page.getByText("Первый и последний поезд").click();
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Расписание",
+      }),
+    ).toBeVisible();
+    await expect(page.getByText("Геологическая")).toBeVisible();
+    await expect(page.getByText("В сторону Ботанической")).toBeVisible();
+    await expect(page.getByRole("radio", { name: "Сегодня" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
+    await expect(page.getByText("Ближайший")).toBeVisible();
+    await expect(page.getByText("После полуночи", { exact: true })).toBeVisible();
+    await expect(page.getByText("00:15")).toBeVisible();
+
+    await page.getByRole("radio", { name: "Будни" }).click();
+    await expect(page.getByText("Типовое расписание рабочего дня")).toBeVisible();
+
+    await page.getByRole("radio", { name: "Выходные" }).click();
+    await expect(page.getByText("Типовое расписание выходного дня")).toBeVisible();
+
+    await page.getByRole("button", { name: /Назад/i }).click();
+    await expect(page.getByText("Следующий поезд")).toBeVisible();
+    await expect(page.getByText("Геологическая")).toBeVisible();
+    await expect(page.getByText("Чкаловская")).toBeVisible();
+  });
 });

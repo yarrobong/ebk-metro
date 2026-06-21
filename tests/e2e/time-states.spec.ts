@@ -65,4 +65,26 @@ test.describe("metro time states", () => {
     await expect(page.getByText("Метро пока закрыто")).toBeVisible();
     await expect(page.getByText("Первый поезд в 06:02")).toBeVisible();
   });
+
+  test("keeps after-midnight departures at the end of the full schedule", async ({
+    page,
+  }) => {
+    await seedMetroTime(page, "2024-01-06T00:00:05+05:00");
+    await openApp(page);
+    await selectRoute(page, "Геологическая", "В сторону Ботанической");
+
+    await page.getByText("Первый и последний поезд").click();
+
+    const afterMidnightGroup = page.getByLabel("Отправления в 00 часов");
+
+    await expect(
+      page.getByText("Ночная часть расписания за 5 января").first(),
+    ).toBeVisible();
+    await expect(page.getByText("После полуночи", { exact: true })).toBeVisible();
+    await expect(afterMidnightGroup.getByText("00")).toBeVisible();
+    await expect(afterMidnightGroup.getByText("01")).toBeVisible();
+    await expect(afterMidnightGroup.getByText("15")).toBeVisible();
+    await expect(page.getByText("Ближайший")).toBeVisible();
+    await expect(page.getByText("24:01")).not.toBeVisible();
+  });
 });

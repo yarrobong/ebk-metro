@@ -9,19 +9,22 @@
 | `npm run lint`          | ESLint and React Hooks rules                              |
 | `npm run format:check`  | Prettier formatting validation                            |
 | `npm run test:run`      | Unit and component behavior                               |
+| `npm run test:e2e`      | Playwright coverage for critical user flows               |
 | `npm run build`         | Validation, TypeScript build, Vite bundle, PWA generation |
 
 ## Time and operating-day coverage
 
-| Scenario                                     | Coverage                                                             |
-| -------------------------------------------- | -------------------------------------------------------------------- |
-| `31`, `30`, `1`, `0`, `15` second boundaries | `src/domain/metro/schedule.test.ts`                                  |
-| Before opening                               | `src/domain/metro/schedule.test.ts`, `src/pages/TrainsPage.test.tsx` |
-| After closing                                | `src/domain/metro/schedule.test.ts`                                  |
-| Last train and post-midnight arrival         | `src/domain/metro/schedule.test.ts`                                  |
-| Friday to Saturday                           | `src/domain/metro/schedule.test.ts`                                  |
-| Sunday to Monday                             | `src/domain/metro/schedule.test.ts`                                  |
-| Yekaterinburg timezone handling              | `src/domain/time/time.test.ts`, metadata validation                  |
+| Scenario                                     | Coverage                                                               |
+| -------------------------------------------- | ---------------------------------------------------------------------- |
+| `31`, `30`, `1`, `0`, `15` second boundaries | `src/domain/metro/schedule.test.ts`                                    |
+| Before opening                               | `src/domain/metro/schedule.test.ts`, `src/pages/TrainsPage.test.tsx`   |
+| After closing                                | `src/domain/metro/schedule.test.ts`                                    |
+| Last train and post-midnight arrival         | `src/domain/metro/schedule.test.ts`                                    |
+| First, last, and nearest daily schedule item | `src/domain/metro/schedule.test.ts`, `src/pages/SchedulePage.test.tsx` |
+| Grouped daily schedule after midnight        | `src/domain/metro/schedule.test.ts`, `tests/e2e/time-states.spec.ts`   |
+| Friday to Saturday                           | `src/domain/metro/schedule.test.ts`                                    |
+| Sunday to Monday                             | `src/domain/metro/schedule.test.ts`                                    |
+| Yekaterinburg timezone handling              | `src/domain/time/time.test.ts`, metadata validation                    |
 
 ## Route and destination coverage
 
@@ -33,6 +36,8 @@
 | Destination selection                   | `src/pages/TrainsPage.test.tsx`, `src/app/App.test.tsx`            |
 | Destination reset on direction change   | `src/app/App.test.tsx`                                             |
 | Travel estimate and arrival calculation | `src/domain/metro/travel.test.ts`, `src/pages/TrainsPage.test.tsx` |
+| First/last card to full schedule flow   | `src/pages/SchedulePage.test.tsx`, `tests/e2e/metro-flows.spec.ts` |
+| Today, weekday, weekend schedule modes  | `src/pages/SchedulePage.test.tsx`, `tests/e2e/metro-flows.spec.ts` |
 
 ## Settings, PWA, and support coverage
 

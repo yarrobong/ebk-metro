@@ -103,3 +103,40 @@ export function formatRussianDate(
     timeZone,
   }).format(new Date(Date.UTC(year, month - 1, day, 12)));
 }
+
+export function formatRussianDayMonth(
+  dateString: string,
+  timeZone = "Asia/Yekaterinburg",
+): string {
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return dateString;
+  }
+
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    timeZone,
+  }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+}
+
+export function formatRussianWeekdayDate(
+  dateString: string,
+  timeZone = "Asia/Yekaterinburg",
+): string {
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return dateString;
+  }
+
+  const formatted = new Intl.DateTimeFormat("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone,
+  }).format(new Date(Date.UTC(year, month - 1, day, 12)));
+
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}

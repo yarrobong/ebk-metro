@@ -123,6 +123,7 @@ describe("Travel Service", () => {
     const metroState: MetroServiceState = {
       status: "running",
       dayType: "weekday",
+      scheduleDayType: "weekday",
       operationalDate: "2024-01-05",
       isPreviousOperationalDay: false,
       nearest: {
@@ -163,6 +164,7 @@ describe("Travel Service", () => {
     const metroState: MetroServiceState = {
       status: "running",
       dayType: "weekday",
+      scheduleDayType: "weekday",
       operationalDate: "2024-01-05",
       isPreviousOperationalDay: false,
       nearest: {

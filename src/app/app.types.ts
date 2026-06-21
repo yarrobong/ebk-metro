@@ -1,4 +1,10 @@
-export type AppScreen = "stations" | "trains" | "settings" | "about" | "install";
+export type AppScreen =
+  | "stations"
+  | "trains"
+  | "schedule"
+  | "settings"
+  | "about"
+  | "install";
 
 export type ToastType = "success" | "info" | "warning" | "error";
 

@@ -13,6 +13,8 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const showToast = useAppStore((state) => state.showToast);
+  const screen = useAppStore((state) => state.screen);
+  const shouldShowBottomNavigation = screen !== "schedule";
 
   useEffect(() => {
     const handleOffline = () => showToast("Нет подключения к интернету", "warning");
@@ -30,11 +32,17 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <PwaProvider>
       <div className="min-h-screen bg-app-bg text-text-primary">
-        <main className="app-safe-area mx-auto w-full max-w-[520px] pb-28">
+        <main
+          className={
+            shouldShowBottomNavigation
+              ? "app-safe-area mx-auto w-full max-w-[520px] pb-28"
+              : "app-safe-area mx-auto w-full max-w-[520px] pb-8"
+          }
+        >
           {children}
         </main>
 
-        <BottomNavigation />
+        {shouldShowBottomNavigation && <BottomNavigation />}
         <PwaUpdateBanner />
         <ToastViewport />
       </div>
